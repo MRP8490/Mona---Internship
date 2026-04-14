@@ -10,3 +10,55 @@
 @import "./css/styles/style.css";
 @import "./css/colors/scheme-01.css";
 @import "./css/styles/coloring.css";
+
+#section-collections .slick-prev,
+#section-collections .slick-next {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff !important;
+  border: 1px solid #cfcfcf;
+  box-shadow: none;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+#section-collections .slick-prev {
+  left: -18px;
+}
+
+#section-collections .slick-next {
+  right: -18px;
+}
+
+#section-collections .slick-prev:hover,
+#section-collections .slick-next:hover {
+  background: #fff !important;
+  border: 1px solid #cfcfcf;
+}
+
+#section-collections .slick-prev:before,
+#section-collections .slick-next:before {
+  font-size: 18px;
+  color: #444;
+  opacity: 1;
+}
+
+#section-collections .slick-prev:before {
+  content: "‹";
+}
+
+#section-collections .slick-next:before {
+  content: "›";
+}
+
+#section-collections .slick-list {
+  margin: 0 -6px;
+}
+
+#section-collections .slick-slide {
+  padding: 0 6px;
+  box-sizing: border-box;
+}
