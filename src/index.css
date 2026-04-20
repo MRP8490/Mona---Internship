@@ -123,3 +123,36 @@
 #section-items .slick-next:before {
   content: "›";
 }
+
+.skeleton-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  animation: pulse 1.2s infinite;
+}
+
+.skeleton-text {
+  height: 12px;
+  width: 120px;
+  background: #2a2a2a;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  animation: pulse 1.2s infinite;
+}
+
+.skeleton-text.small {
+  width: 60px;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
