@@ -13,14 +13,11 @@ const AuthorItems = ({ authorId, item }) => {
         );
         const data = await response.json();
 
-       const filteredItems = data.filter(
-  (card) => String(card.authorId) === String(authorId)
-);
+        const filteredItems = data.filter(
+          (card) => String(card.authorId) === String(authorId)
+        );
 
-console.log("filteredItems:", filteredItems);
-
-setItems(filteredItems);
-
+        console.log("filteredItems:", filteredItems);
         setItems(filteredItems);
       } catch (error) {
         console.error(error);
@@ -41,17 +38,11 @@ setItems(filteredItems);
           {itemsToShow.map((card, index) => (
             <div
               className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
-              key={card.id || index}
+              key={card.nftId || card.id || index}
             >
               <div className="nft__item">
                 <div className="author_list_pp">
-                  <Link
-                    to="/author"
-                    state={{
-                      item: card,
-                      authorId: card.authorId,
-                    }}
-                  >
+                  <Link to={`/author/${card.authorId}`}>
                     <img
                       className="lazy"
                       src={card.authorImage || AuthorImage}
@@ -62,7 +53,7 @@ setItems(filteredItems);
                 </div>
 
                 <div className="nft__item_wrap">
-                  <Link to="/item-details" state={{ item: card }}>
+                  <Link to={`/item-details/${card.nftId}`}>
                     <img
                       src={card.nftImage}
                       className="lazy nft__item_preview"
@@ -72,7 +63,7 @@ setItems(filteredItems);
                 </div>
 
                 <div className="nft__item_info">
-                  <Link to="/item-details" state={{ item: card }}>
+                  <Link to={`/item-details/${card.nftId}`}>
                     <h4>{card.title}</h4>
                   </Link>
 

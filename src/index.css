@@ -156,3 +156,22 @@
     opacity: 0.5;
   }
 }
+
+.nft__item_wrap {
+  position: relative;
+}
+
+.nft__item_wrap a {
+  position: relative;
+  z-index: 5;
+  display: block;
+}
+
+.nft__item_wrap img {
+  display: block;
+  width: 100%;
+}
+
+.nft__item_extra {
+  pointer-events: none;
+}

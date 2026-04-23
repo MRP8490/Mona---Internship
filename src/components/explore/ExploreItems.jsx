@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthorImage from "../../images/author_thumbnail.jpg";
 import nftImage from "../../images/nftImage.jpg";
 import Skeleton from "../UI/Skeleton";
 
 const ExploreItems = () => {
+  const navigate = useNavigate();
+
   const [items, setItems] = useState([]);
   const [timeLeft, setTimeLeft] = useState({});
   const [visibleCount, setVisibleCount] = useState(8);
@@ -13,29 +15,29 @@ const ExploreItems = () => {
   const [selectedFilter, setSelectedFilter] = useState("");
 
   useEffect(() => {
-  const fetchItems = async () => {
-    try {
-      setLoading(true);
+    const fetchItems = async () => {
+      try {
+        setLoading(true);
 
-      const url = selectedFilter
-        ? `https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=${selectedFilter}`
-        : "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore";
+        const url = selectedFilter
+          ? `https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=${selectedFilter}`
+          : "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore";
 
-      const res = await fetch(url);
-      const data = await res.json();
+        const res = await fetch(url);
+        const data = await res.json();
 
-      setItems(Array.isArray(data) ? data : []);
-      setVisibleCount(8); // reset
-      setHasMore(true);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
+        setItems(Array.isArray(data) ? data : []);
+        setVisibleCount(8);
+        setHasMore(true);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchItems();
-}, [selectedFilter]);
+    fetchItems();
+  }, [selectedFilter]);
 
   useEffect(() => {
     if (!items.length) return;
@@ -84,33 +86,35 @@ const ExploreItems = () => {
       setHasMore(false);
     }
   };
-  if (loading) {
-  return (
-    <>
-      <div>
-        <select
-  id="filter-items"
-  value={selectedFilter}
-  onChange={(e) => setSelectedFilter(e.target.value)}
->
-          <option value="">Default</option>
-          <option value="price_low_to_high">Price, Low to High</option>
-          <option value="price_high_to_low">Price, High to Low</option>
-          <option value="likes_high_to_low">Most liked</option>
-        </select>
-      </div>
 
-      {new Array(8).fill(0).map((_, i) => (
-        <div
-          className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
-          key={i}
-        >
-          <Skeleton />
+  const goToItemDetails = (nftId) => {
+    navigate(`/item-details/${nftId}`);
+  };
+
+  if (loading) {
+    return (
+      <>
+        <div>
+          <select
+            id="filter-items"
+            value={selectedFilter}
+            onChange={(e) => setSelectedFilter(e.target.value)}
+          >
+            <option value="">Default</option>
+            <option value="price_low_to_high">Price, Low to High</option>
+            <option value="price_high_to_low">Price, High to Low</option>
+            <option value="likes_high_to_low">Most liked</option>
+          </select>
         </div>
-      ))}
-    </>
-  );
-}
+
+        {new Array(8).fill(0).map((_, i) => (
+          <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={i}>
+            <Skeleton />
+          </div>
+        ))}
+      </>
+    );
+  }
 
   return (
     <>
@@ -133,12 +137,17 @@ const ExploreItems = () => {
           className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
           style={{ display: "block", backgroundSize: "cover" }}
         >
-          <div className="nft__item">
+          <div
+            className="nft__item"
+            onClick={() => goToItemDetails(item.nftId)}
+            style={{ cursor: "pointer" }}
+          >
             <div className="author_list_pp">
               <Link
                 to={`/author/${item.authorId}`}
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
+                onClick={(e) => e.stopPropagation()}
               >
                 <img
                   className="lazy"
@@ -154,37 +163,15 @@ const ExploreItems = () => {
             </div>
 
             <div className="nft__item_wrap">
-              <div className="nft__item_extra">
-                <div className="nft__item_buttons">
-                  <button>Buy Now</button>
-                  <div className="nft__item_share">
-                    <h4>Share</h4>
-                    <a href="/" onClick={(e) => e.preventDefault()}>
-                      <i className="fa fa-facebook fa-lg"></i>
-                    </a>
-                    <a href="/" onClick={(e) => e.preventDefault()}>
-                      <i className="fa fa-twitter fa-lg"></i>
-                    </a>
-                    <a href="/" onClick={(e) => e.preventDefault()}>
-                      <i className="fa fa-envelope fa-lg"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <Link to="/item-details">
-                <img
-                  src={item.nftImage || nftImage}
-                  className="lazy nft__item_preview"
-                  alt={item.title}
-                />
-              </Link>
+              <img
+                src={item.nftImage || nftImage}
+                className="lazy nft__item_preview"
+                alt={item.title}
+              />
             </div>
 
             <div className="nft__item_info">
-              <Link to="/item-details">
-                <h4>{item.title}</h4>
-              </Link>
+              <h4>{item.title}</h4>
               <div className="nft__item_price">{item.price} ETH</div>
               <div className="nft__item_like">
                 <i className="fa fa-heart"></i>

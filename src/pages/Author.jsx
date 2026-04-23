@@ -13,7 +13,7 @@ const Author = () => {
   const [nfts, setNfts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [followers, setFollowers] = useState(0);
-const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -33,8 +33,6 @@ const [isFollowing, setIsFollowing] = useState(false);
         setAuthorData(data);
         setNfts(data?.nftCollection || []);
         setFollowers(data?.followers || 0);
-        
-
       } catch (error) {
         console.error(error);
       } finally {
@@ -46,14 +44,14 @@ const [isFollowing, setIsFollowing] = useState(false);
   }, [authorId]);
 
   const handleFollowToggle = () => {
-  if (isFollowing) {
-    setFollowers((prev) => prev - 1);
-    setIsFollowing(false);
-  } else {
-    setFollowers((prev) => prev + 1);
-    setIsFollowing(true);
-  }
-};
+    if (isFollowing) {
+      setFollowers((prev) => prev - 1);
+      setIsFollowing(false);
+    } else {
+      setFollowers((prev) => prev + 1);
+      setIsFollowing(true);
+    }
+  };
 
   if (loading) {
     return (
@@ -68,12 +66,12 @@ const [isFollowing, setIsFollowing] = useState(false);
           <section>
             <div className="container">
               <div className="row">
-  {new Array(4).fill(0).map((_, i) => (
-    <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={i}>
-      <Skeleton />
-    </div>
-  ))}
-</div>
+                {new Array(4).fill(0).map((_, i) => (
+                  <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={i}>
+                    <Skeleton />
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
         </div>
@@ -142,13 +140,12 @@ const [isFollowing, setIsFollowing] = useState(false);
 
                   <div className="profile_follow de-flex">
                     <div className="de-flex-col">
-
                       <div className="profile_follower">
-  {followers} followers
-</div>
-<button className="btn-main" onClick={handleFollowToggle}>
-  {isFollowing ? "Unfollow" : "Follow"}
-</button>
+                        {followers} followers
+                      </div>
+                      <button className="btn-main" onClick={handleFollowToggle}>
+                        {isFollowing ? "Unfollow" : "Follow"}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -159,7 +156,7 @@ const [isFollowing, setIsFollowing] = useState(false);
                   {nfts.map((nft, index) => (
                     <div
                       className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
-                      key={index}
+                      key={nft.nftId || nft.id || index}
                     >
                       <div className="nft__item">
                         <div className="author_list_pp">
@@ -174,16 +171,24 @@ const [isFollowing, setIsFollowing] = useState(false);
                         </div>
 
                         <div className="nft__item_wrap">
-                          <img
-                            src={nft.nftImage}
-                            className="lazy nft__item_preview"
-                            alt={nft.title}
-                          />
+                          <Link to={`/item-details/${nft.nftId}`}>
+                            <img
+                              src={nft.nftImage}
+                              className="lazy nft__item_preview"
+                              alt={nft.title}
+                            />
+                          </Link>
                         </div>
 
                         <div className="nft__item_info">
-                          <h4>{nft.title}</h4>
-                          <div className="nft__item_price">{nft.price} ETH</div>
+                          <Link to={`/item-details/${nft.nftId}`}>
+                            <h4>{nft.title}</h4>
+                          </Link>
+
+                          <div className="nft__item_price">
+                            {nft.price} ETH
+                          </div>
+
                           <div className="nft__item_like">
                             <i className="fa fa-heart"></i>
                             <span>{nft.likes}</span>
