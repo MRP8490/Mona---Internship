@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AuthorBanner from "../images/author_banner.jpg";
 import { Link, useLocation, useParams } from "react-router-dom";
+import Skeleton from "../components/UI/Skeleton";
 
 const Author = () => {
   const { id } = useParams();
@@ -11,6 +12,8 @@ const Author = () => {
   const [authorData, setAuthorData] = useState(null);
   const [nfts, setNfts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [followers, setFollowers] = useState(0);
+const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const fetchAuthor = async () => {
@@ -29,6 +32,9 @@ const Author = () => {
 
         setAuthorData(data);
         setNfts(data?.nftCollection || []);
+        setFollowers(data?.followers || 0);
+        
+
       } catch (error) {
         console.error(error);
       } finally {
@@ -38,6 +44,16 @@ const Author = () => {
 
     fetchAuthor();
   }, [authorId]);
+
+  const handleFollowToggle = () => {
+  if (isFollowing) {
+    setFollowers((prev) => prev - 1);
+    setIsFollowing(false);
+  } else {
+    setFollowers((prev) => prev + 1);
+    setIsFollowing(true);
+  }
+};
 
   if (loading) {
     return (
@@ -51,7 +67,13 @@ const Author = () => {
 
           <section>
             <div className="container">
-              <h3>Loading...</h3>
+              <div className="row">
+  {new Array(4).fill(0).map((_, i) => (
+    <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={i}>
+      <Skeleton />
+    </div>
+  ))}
+</div>
             </div>
           </section>
         </div>
@@ -120,12 +142,13 @@ const Author = () => {
 
                   <div className="profile_follow de-flex">
                     <div className="de-flex-col">
+
                       <div className="profile_follower">
-                        {authorData.followers} followers
-                      </div>
-                      <Link to="#" className="btn-main">
-                        Follow
-                      </Link>
+  {followers} followers
+</div>
+<button className="btn-main" onClick={handleFollowToggle}>
+  {isFollowing ? "Unfollow" : "Follow"}
+</button>
                     </div>
                   </div>
                 </div>
