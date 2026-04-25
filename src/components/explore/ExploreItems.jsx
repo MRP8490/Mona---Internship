@@ -183,17 +183,17 @@ const ExploreItems = () => {
       ))}
 
       {hasMore && (
-        <div className="col-md-12 text-center">
-          <Link
-            to=""
-            id="loadmore"
-            className="btn-main lead"
-            onClick={handleLoadMore}
-          >
-            Load more
-          </Link>
-        </div>
-      )}
+  <div className="col-md-12 text-center">
+    <button
+      type="button"
+      id="loadmore"
+      className="btn-main lead"
+      onClick={handleLoadMore}
+    >
+      Load more
+    </button>
+  </div>
+)}
     </>
   );
 };
