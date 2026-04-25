@@ -19,13 +19,19 @@ const HotCollections = () => {
     arrows: true,
     responsive: [
       {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
         breakpoint: 992,
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 576,
+        breakpoint: 768,
         settings: {
           slidesToShow: 1,
         },
@@ -57,11 +63,7 @@ const HotCollections = () => {
 
   if (loading) {
     return (
-      <section
-  id="section-collections"
-  className="no-bottom"
-  data-aos="fade-up"
->
+      <section id="section-collections" className="no-bottom">
         <div className="container">
           <div className="col-lg-12">
             <div className="text-center">
@@ -100,30 +102,50 @@ const HotCollections = () => {
               <div key={itemId || index}>
                 <div className="nft_coll">
                   <div className="nft_wrap">
-                    <Link to={`/item-details/${itemId}`}>
+                    {itemId ? (
+                      <Link to={`/item-details/${itemId}`}>
+                        <img
+                          src={item.nftImage}
+                          className="lazy img-fluid"
+                          alt={item.title}
+                        />
+                      </Link>
+                    ) : (
                       <img
                         src={item.nftImage}
                         className="lazy img-fluid"
                         alt={item.title}
                       />
-                    </Link>
+                    )}
                   </div>
 
                   <div className="nft_coll_pp">
-                    <Link to={`/author/${item.authorId}`}>
+                    {item.authorId ? (
+                      <Link to={`/author/${item.authorId}`}>
+                        <img
+                          className="lazy pp-coll"
+                          src={item.authorImage}
+                          alt={item.title}
+                        />
+                      </Link>
+                    ) : (
                       <img
                         className="lazy pp-coll"
                         src={item.authorImage}
                         alt={item.title}
                       />
-                    </Link>
+                    )}
                     <i className="fa fa-check"></i>
                   </div>
 
                   <div className="nft_coll_info">
-                    <Link to={`/item-details/${itemId}`}>
+                    {itemId ? (
+                      <Link to={`/item-details/${itemId}`}>
+                        <h4>{item.title}</h4>
+                      </Link>
+                    ) : (
                       <h4>{item.title}</h4>
-                    </Link>
+                    )}
                     <span>ERC-{item.code}</span>
                   </div>
                 </div>
