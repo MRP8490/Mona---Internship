@@ -14,10 +14,10 @@ const TopSellers = () => {
           "https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers"
         );
         const data = await res.json();
-        setSellers(data);
-        setLoading(false);
+        setSellers(Array.isArray(data) ? data : []);
       } catch (err) {
         console.log(err);
+      } finally {
         setLoading(false);
       }
     };
@@ -53,12 +53,12 @@ const TopSellers = () => {
                   ))
                 : sellers.slice(0, 12).map((seller, index) => (
                     <li
-  key={seller.id || index}
-  data-aos="fade-up"
-  data-aos-delay={index * 50}
->
+                      key={seller.id || index}
+                      data-aos="fade-up"
+                      data-aos-delay={index * 50}
+                    >
                       <div className="author_list_pp">
-                       <Link to={`/author/${seller.authorId}`}>
+                        <Link to={`/author/${seller.authorId}`}>
                           <img
                             className="pp-author"
                             src={seller.authorImage || AuthorImage}
@@ -69,9 +69,7 @@ const TopSellers = () => {
                       </div>
 
                       <div className="author_list_info">
-                        <Link
-                          to={`/author/${seller.authorId}`}
-                        >
+                        <Link to={`/author/${seller.authorId}`}>
                           {seller.authorName}
                         </Link>
                         <span>{seller.price} ETH</span>
