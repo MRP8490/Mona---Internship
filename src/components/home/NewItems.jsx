@@ -10,6 +10,33 @@ const NewItems = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState({});
+  const [slidesToShow, setSlidesToShow] = useState(4);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setSlidesToShow(1);
+      } else if (window.innerWidth <= 1024) {
+        setSlidesToShow(2);
+      } else {
+        setSlidesToShow(4);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: slidesToShow,
+    slidesToScroll: 1,
+    arrows: true,
+  };
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -77,28 +104,6 @@ const NewItems = () => {
     return () => clearInterval(interval);
   }, [items]);
 
-  const settings = {
-  dots: false,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  arrows: true,
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 2,
-      },
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 1,
-      },
-    },
-  ],
-};
   if (loading) {
     return (
       <section id="section-items" className="no-bottom">
@@ -132,7 +137,7 @@ const NewItems = () => {
           </div>
         </div>
 
-        <Slider {...settings}>
+        <Slider {...settings} key={slidesToShow}>
           {items.map((item, index) => {
             const itemId = item.nftId || item.id;
             const authorId = item.authorId;
