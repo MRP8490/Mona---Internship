@@ -9,29 +9,33 @@ import "slick-carousel/slick/slick-theme.css";
 const HotCollections = () => {
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [slidesToShow, setSlidesToShow] = useState(4);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setSlidesToShow(1);
+      } else if (window.innerWidth <= 1024) {
+        setSlidesToShow(2);
+      } else {
+        setSlidesToShow(4);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const settings = {
-  dots: false,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  arrows: true,
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 2,
-      },
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 1,
-      },
-    },
-  ],
-};
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: slidesToShow,
+    slidesToScroll: 1,
+    arrows: true,
+  };
 
   useEffect(() => {
     const fetchCollections = async () => {
@@ -54,6 +58,64 @@ const HotCollections = () => {
 
     fetchCollections();
   }, []);
+
+  const renderCard = (item, index) => {
+    const itemId = item.nftId || item.id;
+
+    return (
+      <div key={itemId || index}>
+        <div className="nft_coll">
+          <div className="nft_wrap">
+            {itemId ? (
+              <Link to={`/item-details/${itemId}`}>
+                <img
+                  src={item.nftImage}
+                  className="lazy img-fluid"
+                  alt={item.title}
+                />
+              </Link>
+            ) : (
+              <img
+                src={item.nftImage}
+                className="lazy img-fluid"
+                alt={item.title}
+              />
+            )}
+          </div>
+
+          <div className="nft_coll_pp">
+            {item.authorId ? (
+              <Link to={`/author/${item.authorId}`}>
+                <img
+                  className="lazy pp-coll"
+                  src={item.authorImage}
+                  alt={item.title}
+                />
+              </Link>
+            ) : (
+              <img
+                className="lazy pp-coll"
+                src={item.authorImage}
+                alt={item.title}
+              />
+            )}
+            <i className="fa fa-check"></i>
+          </div>
+
+          <div className="nft_coll_info">
+            {itemId ? (
+              <Link to={`/item-details/${itemId}`}>
+                <h4>{item.title}</h4>
+              </Link>
+            ) : (
+              <h4>{item.title}</h4>
+            )}
+            <span>ERC-{item.code}</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   if (loading) {
     return (
@@ -88,64 +150,8 @@ const HotCollections = () => {
           </div>
         </div>
 
-        <Slider {...settings}>
-          {collections.map((item, index) => {
-            const itemId = item.nftId || item.id;
-
-            return (
-              <div key={itemId || index}>
-                <div className="nft_coll">
-                  <div className="nft_wrap">
-                    {itemId ? (
-                      <Link to={`/item-details/${itemId}`}>
-                        <img
-                          src={item.nftImage}
-                          className="lazy img-fluid"
-                          alt={item.title}
-                        />
-                      </Link>
-                    ) : (
-                      <img
-                        src={item.nftImage}
-                        className="lazy img-fluid"
-                        alt={item.title}
-                      />
-                    )}
-                  </div>
-
-                  <div className="nft_coll_pp">
-                    {item.authorId ? (
-                      <Link to={`/author/${item.authorId}`}>
-                        <img
-                          className="lazy pp-coll"
-                          src={item.authorImage}
-                          alt={item.title}
-                        />
-                      </Link>
-                    ) : (
-                      <img
-                        className="lazy pp-coll"
-                        src={item.authorImage}
-                        alt={item.title}
-                      />
-                    )}
-                    <i className="fa fa-check"></i>
-                  </div>
-
-                  <div className="nft_coll_info">
-                    {itemId ? (
-                      <Link to={`/item-details/${itemId}`}>
-                        <h4>{item.title}</h4>
-                      </Link>
-                    ) : (
-                      <h4>{item.title}</h4>
-                    )}
-                    <span>ERC-{item.code}</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        <Slider {...settings} key={slidesToShow}>
+          {collections.map(renderCard)}
         </Slider>
       </div>
     </section>
